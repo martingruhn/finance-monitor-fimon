@@ -16,3 +16,8 @@ table,th,td {
 	border: 1px solid black;
 	padding: 3px 10px;
 }
+
+.code {
+	font-family: monospace;
+	font-style: oblique;
+}

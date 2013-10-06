@@ -7,7 +7,14 @@
 <link rel="stylesheet" type="text/css" href="monitor.css"></link>
 </head>
 <body>
-	<h1>Eingabeparameter</h1>
+	<h1>Allianz IndexSelect Monitor</h1>
+	<p>
+		Diese Seite zeigt die Wertentwicklung des Aktienindex EURO STOXX 50&reg;, so wie er sich 
+		in Zusammenhang mit dem Produkt <a
+			href="https://www.allianz.de/ratgeber/vorsorge/aktuell/vorsorge-indexselect.html">IndexSelect</a>
+		der Allianz Versicherung auswirkt.
+	</p>
+	<h2>Eingabeparameter</h2>
 	<form method="get">
 	<p>
 		Von: <input name="fromMonth" type="text" value="MM"
@@ -20,7 +27,7 @@
 	</p>
 	</form>
 
-	<h1>Ergebnis</h1>
+	<h2>Ergebnis</h2>
 	<table id="resultTable">
 		<thead>
 			<tr>
@@ -39,6 +46,13 @@
 			</tr>
 		</tbody>
 	</table>
+	
+	<h2>Hintergrundinformationen</h2>
+	<p>Die zugrundeliegenden Aktiendaten stammen von Yahoo! Finanzen. Links:</p>
+	<ul>
+		<li>Historische Daten EURO STOXX 50&reg; <a id="linkYahooHtml" href="#" target="_blank">auf Yahoo! Finanzen</a> (als <a id="linkYahooCsv" href="#" target="_blank">CSV</a>)</li>
+		<li>YQL Query (zum Testen in <a href="http://developer.yahoo.com/yql/console/" target="_blank">YQL console</a>): <br /><span id="yqlQuery" class="code" /></li>
+	</ul>
 </body>
 
 </html>

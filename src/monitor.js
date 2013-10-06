@@ -1,13 +1,15 @@
 var ALLIANZ_MONITOR = {
 
-	yql : "select * from csv where url='http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&amp;a={fm}&amp;b=01&amp;c={fy}&amp;d={tm}&amp;e=01&amp;f={ty}&amp;g=m&amp;ignore=.csv'",
+	templateYql : "select * from csv where url='http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&amp;a={fm}&amp;b=01&amp;c={fy}&amp;d={tm}&amp;e=01&amp;f={ty}&amp;g=m&amp;ignore=.csv'",
+	templateLinkYahooHtml : "http://de.finance.yahoo.com/q/hp?s=^STOXX50E&b=01&a={fm}&c={fy}&e=01&d={tm}&f={ty}&g=m",
+	templateLinkYahooCsv : "http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&b=01&a={fm}&c={fy}&e=01&d={tm}&f={ty}&g=m&ignore=.csv",
 	cap : 4.3,
 	toMonth : 0,
 
 	handleResponse : function(msg) {
 		var valueByMonth = this.toValueByMonth(msg);
 		var rates = this.calculateRates(valueByMonth);
-		this.render(rates);
+		this.renderRates(rates);
 	},
 
 	/* returns s.th. like [{month: "06" , value : 2716.03}] */
@@ -58,7 +60,7 @@ var ALLIANZ_MONITOR = {
 		}
 	},
 
-	render : function(rates) {
+	renderRates : function(rates) {
 		var t = $("#rateTemplate");
 		$.each(rates, function(index, rate) {
 			var rateView = t.clone();
@@ -75,28 +77,42 @@ var ALLIANZ_MONITOR = {
 			return value != null ? value : "";
 		}
 	},
-
-	requestData : function(fy, fm, ty, tm) {
+	
+	handleRequest : function(fy, fm, ty, tm) {
+		var yqlQuery = this.buildQueryString(fy, fm, ty, tm);
+		
+		this.renderInfoLinks(fy, fm, ty, tm, yqlQuery);
+		
 		$.ajax({
 			type : "GET",
 			url : "http://query.yahooapis.com/v1/public/yql?format=json&diagnostics=true&q="
-					+ encodeURIComponent(this.buildQueryString(fy, fm, ty, tm)),
+					+ encodeURIComponent(yqlQuery),
 			dataType : "jsonp"
 		}).done(function(msg) {
 			ALLIANZ_MONITOR.handleResponse(msg);
 		});
 	},
 	
+	renderInfoLinks : function(fy, fm, ty, tm, yqlQuery) {
+		$("#yqlQuery").text(yqlQuery);
+		$("#linkYahooHtml").attr("href", this.formatFromToDates(this.templateLinkYahooHtml, fy, fm, ty, tm));
+		$("#linkYahooCsv").attr("href", this.formatFromToDates(this.templateLinkYahooCsv, fy, fm, ty, tm));
+	},
+
 	buildQueryString : function(fy, fm, ty, tm) {
 		/* beware: 
 		 * 1. yahoo's January is 0
 		 * 2. it seems like if the first day of month is not a working day, then that month is omitted
 		 *    hence workaround: go one month further and cut it off later 
 		 */
-		var query=this.yql.replace("{fy}", fy).replace("{fm}", fm-1).replace("{ty}", ty).replace("{tm}", tm);
+		var query = this.formatFromToDates(this.templateYql, fy, fm, ty, tm);
 		this.toMonth = tm;
 		console.log(query);
 		return query;
+	},
+	
+	formatFromToDates : function(template, fy, fm, ty, tm) {
+		return template.replace("{fy}", fy).replace("{fm}", fm-1).replace("{ty}", ty).replace("{tm}", tm);
 	}
 	
 };
@@ -116,7 +132,7 @@ $(document).ready(function() {
 	var tm = getParam("toMonth");
 	
 	if (fy > 1000 && fm > 0 && ty > 1000 && tm > 0) {
-		ALLIANZ_MONITOR.requestData(fy, fm, ty, tm);
+		ALLIANZ_MONITOR.handleRequest(fy, fm, ty, tm);
 	}
 
 });
