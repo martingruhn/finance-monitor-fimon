@@ -1,0 +1,11 @@
+.input-year {
+	maxlength: 4;
+	width: 40px
+}
+.input-month {
+	maxlength: 2;
+	width: 30px
+}
+#resultTable {
+	border:solid 1px;
+}

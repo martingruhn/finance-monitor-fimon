@@ -2,11 +2,43 @@
 <html>
 <head>
 <script type="text/javascript" src="../lib/jquery-2.0.3.js"></script>
-<script type="text/javascript" src="./monitor.js"></script>
+<script type="text/javascript" src="../lib/purl.js"></script>
+<script type="text/javascript" src="monitor.js"></script>
+<link rel="stylesheet" type="text/css" href="monitor.css"></link>
 </head>
 <body>
-	<p>Ein bisschen Text:</p>
-	<p id="textnode"></p>
+	<h1>Eingabeparameter</h1>
+	<form method="get">
+	<p>
+		Von: <input name="fromMonth" type="text" value="MM"
+			class="input-month" />-<input name="fromYear" type="text"
+			value="YYYY" class="input-year" />
+		Bis: <input name="toMonth" type="text" value="MM"
+			class="input-month" />-<input name="toYear" type="text"
+			value="YYYY" class="input-year" />
+		<input id="submitButton" type="submit" value="&Uuml;bernehmen" />
+	</p>
+	</form>
+
+	<h1>Ergebnis</h1>
+	<table id="resultTable">
+		<thead>
+			<tr>
+				<th>Monat</th>
+				<th>Schlusswert</th>
+				<th>Ver&auml;nderung</th>
+				<th>mit Cap</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr id="rateTemplate" style="display:none">
+				<td>06</td>
+				<td>2763.25</td>
+				<td>5.6</td>
+				<td>4.3</td>
+			</tr>
+		</tbody>
+	</table>
 </body>
 
 </html>
