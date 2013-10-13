@@ -1,5 +1,33 @@
 var mgruhn = mgruhn || {};
 
+$(document).ready(function() {
+	
+	var url = $.url();
+	var fy = getParam("fromYear");
+	var fm = getParam("fromMonth");
+	var ty = getParam("toYear"); 
+	var tm = getParam("toMonth");
+	var cap = getParam("cap") || 4.3;
+	
+	if (fy > 1000 && fm > 0 && ty > 1000 && tm > 0) {
+		var mon = new mgruhn.KursMonitor();
+		var monHtml = new mgruhn.KursMonitorHtml(mon);
+		
+		mon.getRatesFor(fy, fm, ty, tm, cap, function(rates, yqlQuery) {
+			monHtml.renderYqlQuery(yqlQuery);
+			monHtml.renderInfoLinks(fy, fm, ty, tm);
+			monHtml.renderRates(rates);
+		});
+	}
+
+	function getParam(p) {
+		var v = $.url().param(p);
+		if (v > 0) $("[name=" + p + "]").val(v);
+		return parseInt(v);
+	}
+	
+});
+
 mgruhn.KursMonitorHtml = function(kursMonitor) {
 	
 	var templateLinkYahooHtml = "http://de.finance.yahoo.com/q/hp?s=^STOXX50E&b=01&a={fm}&c={fy}&e=01&d={tm}&f={ty}&g=m";
@@ -35,29 +63,4 @@ mgruhn.KursMonitorHtml = function(kursMonitor) {
 	
 };
 
-$(document).ready(function() {
-	
-	var url = $.url();
-	var fy = getParam("fromYear");
-	var fm = getParam("fromMonth");
-	var ty = getParam("toYear"); 
-	var tm = getParam("toMonth");
-	
-	if (fy > 1000 && fm > 0 && ty > 1000 && tm > 0) {
-		var mon = new mgruhn.KursMonitor(4.3);
-		var monHtml = new mgruhn.KursMonitorHtml(mon);
-		
-		mon.getRatesFor(fy, fm, ty, tm, function(rates, yqlQuery) {
-			monHtml.renderYqlQuery(yqlQuery);
-			monHtml.renderInfoLinks(fy, fm, ty, tm);
-			monHtml.renderRates(rates);
-		});
-	}
 
-	function getParam(p) {
-		var v = $.url().param(p);
-		$("[name=" + p + "]").val(v);
-		return parseInt(v);
-	}
-	
-});

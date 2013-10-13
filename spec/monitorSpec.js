@@ -9,7 +9,7 @@ describe("A KursMonitor", function() {
 	}];
 	
 	beforeEach(function() {
-		monitor = new mgruhn.KursMonitor(4.3);
+		monitor = new mgruhn.KursMonitor();
 		mockAjaxHandler();
 	});
 	
@@ -27,7 +27,7 @@ describe("A KursMonitor", function() {
 	});
 
 	it("should calculate rates for given valueByMonth JSON", function() {
-		var rates = monitor.calculateRates(valueByMonth);
+		var rates = monitor.calculateRates(valueByMonth, 4.3);
 		console.log(JSON.stringify(rates));
 		expect(rates.length).toEqual(3);
 		expect(rates[2].factor).toEqual(-2.37);

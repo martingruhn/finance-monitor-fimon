@@ -1,15 +1,14 @@
 var mgruhn = mgruhn || {};
 
-mgruhn.KursMonitor = function(pCap) {
+mgruhn.KursMonitor = function() {
 
-	var cap = pCap || 4.3;
 	var self = this;
 
 	templateYql = "select * from csv where "
 			+ "url='http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&amp;a={fm}&amp;b=01&amp;c={fy}&amp;d={tm}&amp;e=01&amp;f={ty}&amp;g=m&amp;ignore=.csv' "
 			+ "and columns='date,open,high,low,close,volume,adjclose'";
 
-	this.getRatesFor = function(fy, fm, ty, tm, callback) {
+	this.getRatesFor = function(fy, fm, ty, tm, cap, callback) {
 		var yqlQuery = this.buildQueryString(fy, fm, ty, tm);
 		$.ajax({
 			type : "GET",
@@ -18,7 +17,7 @@ mgruhn.KursMonitor = function(pCap) {
 			dataType : "jsonp"
 		}).done(function(msg) {
 			var valueByMonth = self.toValueByMonth(msg, tm);
-			var rates = self.calculateRates(valueByMonth);
+			var rates = self.calculateRates(valueByMonth, cap);
 			if (callback) callback(rates, yqlQuery);
 		});
 	};
@@ -60,7 +59,7 @@ mgruhn.KursMonitor = function(pCap) {
 	/**
 	 * @param valuesByMonth sth. like [{ month : "2012-05", value : 2118.94}, {month : "2012-06", value : 2068.66}]
 	 */
-	this.calculateRates = function(valuesByMonth) {
+	this.calculateRates = function(valuesByMonth, cap) {
 		var result = new Array();
 		var sumFactor = 0;
 		var sumFactorWithCap = 0;
@@ -88,5 +87,5 @@ mgruhn.KursMonitor = function(pCap) {
 			return Math.round(value * tens) / tens;
 		}
 	};
-
+	
 }; 
