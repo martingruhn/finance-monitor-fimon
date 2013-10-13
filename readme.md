@@ -5,7 +5,7 @@ This application shows the development of the stock market index EURO STOXX 50&r
 Usage
 --------------
 
-Download the ZIP package, extract it somewhere on your computer, open kursmonitor.html in your browser, and follow the instructions.
+Download the ZIP package, extract it somewhere on your computer, and open kursmonitor.html in your browser. From there on you need to understand German and follow the instructions (IndexSelect is a German product anyway).
 
 
 Disclaimer
