@@ -1,6 +1,6 @@
 var mgruhn = mgruhn || {};
 
-mgruhn.RentenMonitorHtml = function(rentenMonitor) {
+mgruhn.KursMonitorHtml = function(kursMonitor) {
 	
 	var templateLinkYahooHtml = "http://de.finance.yahoo.com/q/hp?s=^STOXX50E&b=01&a={fm}&c={fy}&e=01&d={tm}&f={ty}&g=m";
 	var templateLinkYahooCsv = "http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&b=01&a={fm}&c={fy}&e=01&d={tm}&f={ty}&g=m&ignore=.csv";
@@ -10,8 +10,8 @@ mgruhn.RentenMonitorHtml = function(rentenMonitor) {
 	};
 
 	this.renderInfoLinks = function(fy, fm, ty, tm, yqlQuery) {
-		$("#linkYahooHtml").attr("href", rentenMonitor.formatFromToDates(templateLinkYahooHtml, fy, fm, ty, tm));
-		$("#linkYahooCsv").attr("href", rentenMonitor.formatFromToDates(templateLinkYahooCsv, fy, fm, ty, tm));
+		$("#linkYahooHtml").attr("href", kursMonitor.formatFromToDates(templateLinkYahooHtml, fy, fm, ty, tm));
+		$("#linkYahooCsv").attr("href", kursMonitor.formatFromToDates(templateLinkYahooCsv, fy, fm, ty, tm));
 	};
 
 	this.renderRates = function(rates) {
@@ -44,8 +44,8 @@ $(document).ready(function() {
 	var tm = getParam("toMonth");
 	
 	if (fy > 1000 && fm > 0 && ty > 1000 && tm > 0) {
-		var mon = new mgruhn.RentenMonitor(4.3);
-		var monHtml = new mgruhn.RentenMonitorHtml(mon);
+		var mon = new mgruhn.KursMonitor(4.3);
+		var monHtml = new mgruhn.KursMonitorHtml(mon);
 		
 		mon.getRatesFor(fy, fm, ty, tm, function(rates, yqlQuery) {
 			monHtml.renderYqlQuery(yqlQuery);

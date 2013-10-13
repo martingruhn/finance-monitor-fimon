@@ -1,19 +1,20 @@
 var mgruhn = mgruhn || {};
 
 
-mgruhn.RentenMonitor = function(pCap) {
+mgruhn.KursMonitor = function(pCap) {
 
 	var cap = pCap || 4.3;
 	var self = this;
 
-	templateYql = "select * from csv where url='http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&amp;a={fm}&amp;b=01&amp;c={fy}&amp;d={tm}&amp;e=01&amp;f={ty}&amp;g=m&amp;ignore=.csv'";
+	templateYql = "select * from csv where "
+			+ "url='http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&amp;a={fm}&amp;b=01&amp;c={fy}&amp;d={tm}&amp;e=01&amp;f={ty}&amp;g=m&amp;ignore=.csv' "
+			+ "and columns='date,open,high,low,close,volume,adjclose'";
 
 	this.getRatesFor = function(fy, fm, ty, tm, callback) {
 		var yqlQuery = this.buildQueryString(fy, fm, ty, tm);
-		
 		$.ajax({
 			type : "GET",
-			url : "http://query.yahooapis.com/v1/public/yql?format=json&diagnostics=true&q="
+			url : "http://query.yahooapis.com/v1/public/yql?format=json&diagnostics=false&q="
 					+ encodeURIComponent(yqlQuery),
 			dataType : "jsonp"
 		}).done(function(msg) {
@@ -38,12 +39,13 @@ mgruhn.RentenMonitor = function(pCap) {
 		return template.replace("{fy}", fy).replace("{fm}", fm-1).replace("{ty}", ty).replace("{tm}", tm);
 	};
 
+	/** See monitorSpec.js input/output example */
 	this.toValueByMonth = function(jsonCsv, toMonth) {
-		var originalRow = jsonCsv.query.results.row;
-		var rows = jsonCsv.query.results.row.slice(1, originalRow.length);
-		var result = $.map(rows, function(r) {
-			var month = r.col0.substring(0, 7);
-			var value = parseFloat(r.col6);
+		var rowsWithHeader = jsonCsv.query.results.row;
+		var dataRows = jsonCsv.query.results.row.slice(1, rowsWithHeader.length);
+		var result = $.map(dataRows, function(r) {
+			var month = r.date.substring(0, 7);
+			var value = parseFloat(r.close);
 			return {
 				month : month,
 				value : value
@@ -56,6 +58,9 @@ mgruhn.RentenMonitor = function(pCap) {
 		return result;
 	};
 
+	/**
+	 * @param valuesByMonth sth. like [{ month : "2012-05", value : 2118.94}, {month : "2012-06", value : 2068.66}]
+	 */
 	this.calculateRates = function(valuesByMonth) {
 		var result = new Array();
 		var sumFactor = 0;
