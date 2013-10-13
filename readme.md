@@ -1,5 +1,3 @@
-**Transparency for the pension product IndexSelect of the Allianz Group**
-
 This application shows the development of the stock market index EURO STOXX 50&reg; and its impact on a pension product called [IndexSelect](https://www.allianz.de/produkte/altersvorsorge/vorsorgekonzepte/vorsorgeIndexselect.html) offered by the [German Allianz Group](https://www.allianz.de).
 
 Usage
