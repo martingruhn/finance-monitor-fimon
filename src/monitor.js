@@ -1,6 +1,5 @@
 var mgruhn = mgruhn || {};
 
-
 mgruhn.KursMonitor = function(pCap) {
 
 	var cap = pCap || 4.3;
