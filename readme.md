@@ -32,3 +32,11 @@ Why?
 --------------
 
 I wrote this application to understand and validate regular product information sheets the Allianz Group sends me. Furthermore, I want to be able to track the current development of the underlying stock market index. Last but not least I am practicing Javascript development -- just for fun!
+
+
+Future development
+--------------
+
+Things I am working on:
+- Enhance UI: Only allow Year and "Monat des Indexstichtags" as input
+- Try out angular.js
