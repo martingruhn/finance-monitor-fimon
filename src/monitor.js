@@ -5,43 +5,61 @@ mgruhn.KursMonitor = function() {
 	var self = this;
 
 	templateYql = "select * from csv where "
-			+ "url='http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&amp;a={fm}&amp;b=01&amp;c={fy}&amp;d={tm}&amp;e=01&amp;f={ty}&amp;g=m&amp;ignore=.csv' "
+			+ "url='http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&amp;c={fy}&amp;a={fm}&amp;b={fd}&amp;f={ty}&amp;d={tm}&amp;e={td}&amp;g=m&amp;ignore=.csv' "
 			+ "and columns='date,open,high,low,close,volume,adjclose'";
 
-	this.getRatesFor = function(fy, fm, ty, tm, cap, callback) {
-		var yqlQuery = this.buildQueryString(fy, fm, ty, tm);
+	this.getRatesFor = function(year, referenceMonth, cap, callback) {
+		var fromTo = this.toFromTo(year, referenceMonth);
+		this.queryRatesFromYahooFinance(fromTo.from, fromTo.to, function(msg, yqlQuery) {
+			var valueByMonth = self.toValueByMonth(msg);
+			var rates = self.calculateRates(valueByMonth, cap);
+			if (callback) callback(rates, yqlQuery);
+		});
+	};
+	
+	this.toFromTo = function(year, referenceMonth) {
+		var previousMonthAsIndex = referenceMonth - 2;
+		var from = new Date(year-1, previousMonthAsIndex, 1);
+		var to = lastDayOfMonth(new Date(year, previousMonthAsIndex));
+		return {from: from, to: to};
+	};
+	
+	function lastDayOfMonth(date) {
+		return moment(date).add('months', 1).date(0).toDate();
+	};
+	
+	this.queryRatesFromYahooFinance = function(from, to, callback) {
+		var yqlQuery = this.buildQueryString(from, to);
 		$.ajax({
 			type : "GET",
 			url : "http://query.yahooapis.com/v1/public/yql?format=json&diagnostics=false&q="
 					+ encodeURIComponent(yqlQuery),
 			dataType : "jsonp"
 		}).done(function(msg) {
-			var valueByMonth = self.toValueByMonth(msg, tm);
-			var rates = self.calculateRates(valueByMonth, cap);
-			if (callback) callback(rates, yqlQuery);
+			if (callback) callback(msg, yqlQuery);
 		});
 	};
 	
-	/** 
-	 * Beware: 
-	 * 1. Yahoo's January is 0
-	 * 2. it seems like if the first day of month is not a working day, then that month is omitted
-	 *    hence workaround: go one month further and cut it off later 
-	 */
-	this.buildQueryString = function(fy, fm, ty, tm) {
-		var query = this.formatFromToDates(templateYql, fy, fm, ty, tm);
+	this.buildQueryString = function(from, to) {
+		var query = this.formatFromToDates(templateYql, from, to);
 		return query;
 	};
 	
-	this.formatFromToDates = function(template, fy, fm, ty, tm) {
-		return template.replace("{fy}", fy).replace("{fm}", fm-1).replace("{ty}", ty).replace("{tm}", tm);
+	this.formatFromToDates = function(template, from, to) {
+		return template //
+			.replace("{fy}", from.getFullYear()) //
+			.replace("{fm}", from.getMonth()) //
+			.replace("{fd}", from.getDate()) //
+			.replace("{ty}", to.getFullYear()) //
+			.replace("{tm}", to.getMonth()) //
+			.replace("{td}", to.getDate());
 	};
 
 	/** See monitorSpec.js input/output example */
-	this.toValueByMonth = function(jsonCsv, toMonth) {
+	this.toValueByMonth = function(jsonCsv) {
 		var rowsWithHeader = jsonCsv.query.results.row;
 		var dataRows = jsonCsv.query.results.row.slice(1, rowsWithHeader.length);
-		var result = $.map(dataRows, function(r) {
+		return $.map(dataRows, function(r) {
 			var month = r.date.substring(0, 7);
 			var value = parseFloat(r.close);
 			return {
@@ -49,11 +67,6 @@ mgruhn.KursMonitor = function() {
 				value : value
 			};
 		}).reverse();
-		// workaround: cut off superfluous month
-		if (parseInt(result[result.length-1].month.split("-")[1]) > toMonth) {
-			result.pop();
-		};
-		return result;
 	};
 
 	/**
@@ -82,10 +95,11 @@ mgruhn.KursMonitor = function() {
 		result.push({month : null, value : null, factor : sumFactor, factorWithCap : sumFactorWithCap});
 		return result;
 		
-		function round(value, decimals) {
-			var tens = Math.pow(10, decimals);
-			return Math.round(value * tens) / tens;
-		}
 	};
+	
+	function round(value, decimals) {
+		var tens = Math.pow(10, decimals);
+		return Math.round(value * tens) / tens;
+	}
 	
 }; 

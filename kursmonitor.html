@@ -2,10 +2,14 @@
 <html>
 	<head>
 		<title>Kursmonitor IndexSelect</title>
+		
 		<script type="text/javascript" src="lib/jquery-2.0.3.js"></script>
 		<script type="text/javascript" src="lib/purl.js"></script>
+		<script type="text/javascript" src="lib/moment-2.3.1/moment.js"></script>
+		
 		<script type="text/javascript" src="src/monitor.js"></script>
 		<script type="text/javascript" src="src/monitorHtml.js"></script>
+		
 		<link rel="stylesheet" type="text/css" href="src/monitor.css">
 	</head>
 	<body>
@@ -16,21 +20,30 @@
 			href="https://www.allianz.de/ratgeber/vorsorge/aktuell/vorsorge-indexselect.html">IndexSelect</a>
 			der Allianz Versicherung auswirkt.
 		</p>
-		<h2>Eingabeparameter</h2>
+		<p>
+			Sie k&ouml;nnen diese Seite auch als Lesezeichen speichern, dann bleiben die Parameter erhalten!
+		</p>
+		<h2>Parameter</h2>
 		<form method="get">
 			<p>
-				Von:
-				<input name="fromMonth" type="text" value="MM"
-				class="input-month" />
-				-
-				<input name="fromYear" type="text"
-				value="YYYY" class="input-year" />
-				Bis:
-				<input name="toMonth" type="text" value="MM"
-				class="input-month" />
-				-
-				<input name="toYear" type="text"
-				value="YYYY" class="input-year" />
+				Rendite f&uuml;r das Jahr:
+				<input name="year" type="text" value="YYYY"
+				class="input-year" />
+				Monat des Indexstichtages:
+				<select name="month" size="1" value="MM">
+					<option value="1">Januar</option>
+					<option value="2">Februar</option>
+					<option value="3">M&auml;rz</option>
+					<option value="4">April</option>
+					<option value="5">Mai</option>
+					<option value="6">Juni</option>
+					<option value="7">Juli</option>
+					<option value="8">August</option>
+					<option value="9">September</option>
+					<option value="10">Oktober</option>
+					<option value="11">November</option>
+					<option value="12">Dezember</option>
+				</select>
 				Cap: 
 				<input name="cap" type="text" value="4.3" class="input-year" />
 				<input id="submitButton" type="submit" value="&Uuml;bernehmen" />

@@ -1,7 +1,8 @@
 var mgruhn = mgruhn || {};
 
 /**
- * Response for <code> 
+ * Response for 2012-05-01 to 2012-06-01
+ * <code> 
  * select * from csv where url='http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&amp;a=4&amp;b=01&amp;c=2012&amp;d=5&amp;e=01&amp;f=2012&amp;g=m&amp;ignore=.csv' and columns='date,open,high,low,close,volume,adjclose'
  * <code>
  */
