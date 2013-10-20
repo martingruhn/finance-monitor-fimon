@@ -38,5 +38,5 @@ Future development
 --------------
 
 Things I am working on:
-- Enhance UI: Only allow Year and "Monat des Indexstichtags" as input
 - Try out angular.js
+- Visualize rates / add graphs (e.g. rate by month, development of the last years)
