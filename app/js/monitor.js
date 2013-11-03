@@ -1,5 +1,4 @@
 var mgruhn = mgruhn || {};
-
 mgruhn.KursMonitor = function() {
 
 	var self = this;
@@ -30,10 +29,11 @@ mgruhn.KursMonitor = function() {
 	
 	this.queryRatesFromYahooFinance = function(from, to, callback) {
 		var yqlQuery = this.buildQueryString(from, to);
+		var queryUrl = "http://query.yahooapis.com/v1/public/yql?format=json&diagnostics=false&q="
+			+ encodeURIComponent(yqlQuery);
 		$.ajax({
 			type : "GET",
-			url : "http://query.yahooapis.com/v1/public/yql?format=json&diagnostics=false&q="
-					+ encodeURIComponent(yqlQuery),
+			url : queryUrl,
 			dataType : "jsonp"
 		}).done(function(msg) {
 			if (callback) callback(msg, yqlQuery);

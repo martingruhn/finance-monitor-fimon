@@ -1,18 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html ng-app="kursMonitor">
 	<head>
+		<meta charset="utf-8">
 		<title>Kursmonitor IndexSelect</title>
 		
-		<script type="text/javascript" src="lib/jquery-2.0.3.js"></script>
-		<script type="text/javascript" src="lib/purl.js"></script>
-		<script type="text/javascript" src="lib/moment-2.3.1/moment.js"></script>
+		<script src="lib/jquery-2.0.3.js"></script>
+		<script src="lib/moment-2.3.1/moment.js"></script>
+		<script src="lib/angular/angular.js"></script>
+		<script src="lib/angular/angular-resource.js"></script>
+		<script src="lib/angular/angular-route.js"></script>
 		
-		<script type="text/javascript" src="js/monitor.js"></script>
-		<script type="text/javascript" src="js/monitorHtml.js"></script>
+		<script src="js/monitor.js"></script>
+		<script src="js/controller.js"></script>
 		
-		<link rel="stylesheet" type="text/css" href="css/monitor.css">
+		<link rel="stylesheet" href="css/monitor.css">
 	</head>
-	<body>
+	<body ng-controller="kursMonitorCtrl">
 		<h1>Kursmonitor zur Allianz IndexSelect</h1>
 		<p>
 			Diese Seite zeigt die Wertentwicklung des Aktienindex EURO STOXX 50&reg;, so wie er sich
@@ -24,32 +27,28 @@
 			Sie k&ouml;nnen diese Seite auch als Lesezeichen speichern, dann bleiben die Parameter erhalten!
 		</p>
 		<h2>Parameter</h2>
-		<form method="get">
-			<p>
-				Rendite f&uuml;r das Jahr:
-				<input name="year" type="text" value="YYYY"
-				class="input-year" />
-				Monat des Indexstichtages:
-				<select name="month" size="1" value="MM">
-					<option value="1">Januar</option>
-					<option value="2">Februar</option>
-					<option value="3">M&auml;rz</option>
-					<option value="4">April</option>
-					<option value="5">Mai</option>
-					<option value="6">Juni</option>
-					<option value="7">Juli</option>
-					<option value="8">August</option>
-					<option value="9">September</option>
-					<option value="10">Oktober</option>
-					<option value="11">November</option>
-					<option value="12">Dezember</option>
-				</select>
-				Cap: 
-				<input name="cap" type="text" value="4.3" class="input-year" />
-				<input id="submitButton" type="submit" value="&Uuml;bernehmen" />
-			</p>
-		</form>
-
+		<p>
+			Rendite f&uuml;r das Jahr:
+			<input name="year" type="text" class="input-year" ng-model="year"/>
+			Monat des Indexstichtages:
+			<select name="month" size="1" ng-model="referenceMonth">
+				<option value="1">Januar</option>
+				<option value="2">Februar</option>
+				<option value="3">M&auml;rz</option>
+				<option value="4">April</option>
+				<option value="5">Mai</option>
+				<option value="6">Juni</option>
+				<option value="7">Juli</option>
+				<option value="8">August</option>
+				<option value="9">September</option>
+				<option value="10">Oktober</option>
+				<option value="11">November</option>
+				<option value="12">Dezember</option>
+			</select>
+			Cap: 
+			<input name="cap" type="text" class="input-year" ng-model="cap" />
+			<button id="submitButton" type="submit" ng-click="calculateRates()">&Uuml;bernehmen</button>
+		</p>
 		<h2>Ergebnis</h2>
 		<table id="resultTable">
 			<thead>
@@ -61,11 +60,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr id="rateTemplate" style="display:none">
-					<td>06</td>
-					<td>2763.25</td>
-					<td>5.6</td>
-					<td>4.3</td>
+				<tr ng-repeat="rate in rates" id="rateTemplate">
+					<td>{{rate.month}}</td>
+					<td>{{rate.value}}</td>
+					<td>{{rate.factor}}</td>
+					<td>{{rate.factorWithCap}}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -76,12 +75,13 @@
 		</p>
 		<ul>
 			<li>
-				Historische Daten EURO STOXX 50&reg; <a id="linkYahooHtml" href="#" target="_blank">auf Yahoo! Finanzen</a> (als <a id="linkYahooCsv" href="#" target="_blank">CSV</a>)
+				Historische Daten EURO STOXX 50&reg; <a ng-href="{{yahooHtmlHref}}" target="_blank">auf Yahoo! Finanzen</a> 
+				(als <a ng-href="{{yahooCsvHref}}" target="_blank">CSV</a>)
 			</li>
 			<li>
 				YQL Query (zum Testen in <a href="http://developer.yahoo.com/yql/console/" target="_blank">YQL console</a>):
 				<br />
-				<span id="yqlQuery" class="code">...</span>
+				<span id="yqlQuery" class="code">{{yqlQuery}}</span>
 			</li>
 		</ul>
 	</body>
