@@ -59,7 +59,7 @@ mgruhn.KursMonitor = function() {
 	this.toValueByMonth = function(jsonCsv) {
 		var rowsWithHeader = jsonCsv.query.results.row;
 		var dataRows = jsonCsv.query.results.row.slice(1, rowsWithHeader.length);
-		return $.map(dataRows, function(r) {
+		return dataRows.map(function(r) {
 			var month = r.date.substring(0, 7);
 			var value = parseFloat(r.close);
 			return {
@@ -76,7 +76,8 @@ mgruhn.KursMonitor = function() {
 		var result = new Array();
 		var sumFactor = 0;
 		var sumFactorWithCap = 0;
-		$.each(valuesByMonth, function(index, elem) {
+		for (var i=0; i<valuesByMonth.length; i++) {
+			var elem = valuesByMonth[i];
 			var month = elem.month;
 			var value = elem.value;
 			if (result.length == 0) {
@@ -89,7 +90,7 @@ mgruhn.KursMonitor = function() {
 				sumFactor += factor;
 				sumFactorWithCap += factorWithCap;
 			}
-		});
+		};
 		sumFactor = round(sumFactor, 2);
 		sumFactorWithCap = round(sumFactorWithCap, 2);
 		result.push({month : null, value : null, factor : sumFactor, factorWithCap : sumFactorWithCap});
