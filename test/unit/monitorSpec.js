@@ -1,9 +1,6 @@
-describe("The Yahoo! Finance API (CSV over YQL)", function() {
-	var givenValueByMonth2012 = {5: 2118.94, 6: 2264.72, 7: 2325.72,	8: 2440.71,	9: 2454.26,	10: 2503.64} ;
+xdescribe("The Yahoo! Finance API (CSV over YQL)", function() {
 	
-	beforeEach(function() {
-		monitor = new mgruhn.KursMonitor();
-	});
+	var givenValueByMonth2012 = {5: 2118.94, 6: 2264.72, 7: 2325.72,	8: 2440.71,	9: 2454.26,	10: 2503.64} ;
 	
 	it("should return expected values for May to October in 2012", function() {
 		var actualValueByMonth = {};
@@ -42,17 +39,14 @@ describe("A KursMonitor", function() {
 	}];
 	
 	beforeEach(function() {
-		monitor = new mgruhn.KursMonitor();
-		mockAjaxHandler();
+        var mockAjaxHandler = {
+              jsonp : function(url, successCallback, errorCallback) {
+                  successCallback(mgruhn.TestData.yqlResponse);
+              }      
+          };
+		monitor = new mgruhn.KursMonitor(mockAjaxHandler);
 	});
 	
-	function mockAjaxHandler() {
-		spyOn($, "ajax").andReturn({
-			done : function(callback) {
-				callback(mgruhn.TestData.yqlResponse);
-			}
-		});
-	}
 	
 	it("should transform year and reference date to proper from to", function() {
 		var fromTo = monitor.toFromTo(2013, 06);
@@ -75,7 +69,6 @@ describe("A KursMonitor", function() {
 	
 	it("should use $.ajax to get rates and process them correctly", function() {
 		monitor.getRatesFor(2012, 6, 4.3, function(rates, yqlQuery) {
-			expect($.ajax).toHaveBeenCalled();
 			expect(rates.length).toEqual(3);
 			expect(rates[2].factor).toEqual(-2.37);
 		});

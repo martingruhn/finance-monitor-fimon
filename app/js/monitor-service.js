@@ -1,5 +1,7 @@
 var mgruhn = mgruhn || {};
-mgruhn.KursMonitor = function() {
+mgruhn.KursMonitor = function(jsonpDelegatee) {
+  
+    this.jsonpDelegatee = jsonpDelegatee;
 
 	var self = this;
 
@@ -31,13 +33,11 @@ mgruhn.KursMonitor = function() {
 		var yqlQuery = this.buildQueryString(from, to);
 		var queryUrl = "http://query.yahooapis.com/v1/public/yql?format=json&diagnostics=false&q="
 			+ encodeURIComponent(yqlQuery);
-		$.ajax({
-			type : "GET",
-			url : queryUrl,
-			dataType : "jsonp"
-		}).done(function(msg) {
-			if (callback) callback(msg, yqlQuery);
-		});
+		this.jsonpDelegatee.jsonp(queryUrl, function(jsonResponse) {
+            if (callback) callback(jsonResponse, yqlQuery);
+        }, function(errorMessage) {
+            console.warn("Failure calling yahooapi: " + errorMessage);
+        });
 	};
 	
 	this.buildQueryString = function(from, to) {

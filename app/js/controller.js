@@ -4,8 +4,8 @@ kursMonitorApp.config(['$locationProvider', function($locationProvider) {
 	$locationProvider.html5Mode(true);
 } ]);
 
-kursMonitorApp.controller('kursMonitorCtrl', function($scope, $location) {
-	var monitorService = new mgruhn.KursMonitor();
+kursMonitorApp.controller('kursMonitorCtrl', function($scope, $location, $http) {
+	var monitorService = new mgruhn.KursMonitor(this);
 	
 	var templateLinkYahooHtml = "http://de.finance.yahoo.com/q/hp?s=^STOXX50E&b={fd}&a={fm}&c={fy}&e={td}&d={tm}&f={ty}&g=m";
 	var templateLinkYahooCsv = "http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&b={fd}&a={fm}&c={fy}&e={td}&d={tm}&f={ty}&g=m&ignore=.csv";
@@ -27,7 +27,6 @@ kursMonitorApp.controller('kursMonitorCtrl', function($scope, $location) {
 		monitorService.getRatesFor($scope.year, $scope.referenceMonth, $scope.cap, function(rates, yqlQuery) {
 			$scope.rates = rates;
 			$scope.yqlQuery = yqlQuery;
-			$scope.$apply();
 		});
 	};
 	
@@ -45,7 +44,17 @@ kursMonitorApp.controller('kursMonitorCtrl', function($scope, $location) {
 		$scope.yahooCsvHref = monitorService.formatFromToDates(templateLinkYahooCsv, range.from, range.to);
 	};
 
+	this.jsonp = function(url, successCallback, errorCallback) {
+        $http.jsonp(url + "&callback=JSON_CALLBACK")
+        .success(function(data, status, headers, config) {
+            successCallback(data);
+        }).error(function(data, status, headers, config) {
+            errorCallback("Failure calling yahooapi: " + status);
+        });
+	};
+	
 	if (params.year && params.refMonth && params.cap) {
 		$scope.calculateRates();
-	}
+	};
+	
 });
