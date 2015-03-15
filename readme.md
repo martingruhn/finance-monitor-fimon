@@ -3,7 +3,7 @@ This application monitors the development of the stock market index EURO STOXX 5
 Usage
 --------------
 
-Download the ZIP package, extract it somewhere on your computer, and open kursmonitor.html in your browser. From there on you need to understand German and follow the instructions (IndexSelect is a German product anyway).
+Download the ZIP package, extract it somewhere on your computer, and open app/fimon.html in your browser. From there on you need to understand German and follow the instructions (IndexSelect is a German product anyway).
 
 
 Disclaimer
@@ -11,7 +11,7 @@ Disclaimer
 
 This application is not affiliated with the Allianz Group in any way. It is written in Javascript and HTML. It works completely in your browser. However, it pulls stock data from Yahoo! Finance whenever you trigger calculation/display of rates for a specific time period.
 
-Data from Yahoo! Finance is not distributed with this application nor stored permanently. This application only provides access to it using Yahoos own YQL API. Be aware that Yahoo! Finance allows to obtain data for **personal use only**. See also [related discussion on Yahoo forums](http://developer.yahoo.com/forum/General-Discussion-at-YDN/Using-Yahoo-Finance-API-Not-RSS-/1250246255000-0b82f8f0-7f48-3af2-8fe2-e73a138cbfaa) and [Yahoo! Finance Web Services Terms of Use](http://finance.yahoo.com/badges/tos).
+Data from Yahoo! Finance is not distributed with this application nor stored permanently. This application only provides access to it using Yahoo's own YQL API. Be aware that Yahoo! Finance allows to obtain data for **personal use only**. See also [related discussion on Yahoo forums](http://developer.yahoo.com/forum/General-Discussion-at-YDN/Using-Yahoo-Finance-API-Not-RSS-/1250246255000-0b82f8f0-7f48-3af2-8fe2-e73a138cbfaa) and [Yahoo! Finance Web Services Terms of Use](http://finance.yahoo.com/badges/tos).
 
 
 Understand
