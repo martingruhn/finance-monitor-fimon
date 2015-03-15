@@ -12,9 +12,9 @@ kursMonitorApp.controller('kursMonitorCtrl', function($scope, $location, $http) 
 	
 	var params = $location.search();
 	
-	$scope.year = params.year || "2013";
+	$scope.year = params.year || "2015";
 	$scope.referenceMonth = params.refMonth || "6";
-	$scope.cap = params.cap || "4.3";
+	$scope.cap = params.cap || "3.8";
 	$scope.rates = [];
 	$scope.yqlQuery = "...";
 	$scope.yahooHtmlHref = "#";
@@ -22,8 +22,8 @@ kursMonitorApp.controller('kursMonitorCtrl', function($scope, $location, $http) 
 
 	$scope.calculateRates = function() {
 		$scope.rates = [];
+                setUrlParams();
 		renderInfoLinks($scope.year, $scope.referenceMonth);
-		setUrlParams();
 		monitorService.getRatesFor($scope.year, $scope.referenceMonth, $scope.cap, function(rates, yqlQuery) {
 			$scope.rates = rates;
 			$scope.yqlQuery = yqlQuery;
