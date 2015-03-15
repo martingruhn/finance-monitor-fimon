@@ -11,6 +11,7 @@ mgruhn.KursMonitor = function(jsonpDelegatee) {
 
 	this.getRatesFor = function(year, referenceMonth, cap, callback) {
 		var fromTo = this.toFromTo(year, referenceMonth);
+                // TODO rewrite to parse CSV directly instead of going over yahooapis
 		this.queryRatesFromYahooFinance(fromTo.from, fromTo.to, function(msg, yqlQuery) {
 			var valueByMonth = self.toValueByMonth(msg);
 			var rates = self.calculateRates(valueByMonth, cap);
