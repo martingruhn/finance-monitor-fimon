@@ -6,7 +6,7 @@ mgruhn.KursMonitor = function(jsonpDelegatee) {
 	var self = this;
 
 	templateYql = "select * from csv where "
-			+ "url='http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&amp;c={fy}&amp;a={fm}&amp;b={fd}&amp;f={ty}&amp;d={tm}&amp;e={td}&amp;g=m&amp;ignore=.csv' "
+			+ "url='http://ichart.finance.yahoo.com/table.csv?s=%5ESTOXX50E&c={fy}&a={fm}&b={fd}&f={ty}&d={tm}&e={td}&g=m&ignore=.csv' "
 			+ "and columns='date,open,high,low,close,volume,adjclose'";
 
 	this.getRatesFor = function(year, referenceMonth, cap, callback) {
